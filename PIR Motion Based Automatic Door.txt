@@ -1,0 +1,43 @@
+/*
+  Project: PIR Motion Based Automatic Door
+  Board  : ESP32
+  Sensor : PIR Motion Sensor
+  Output : Servo Motor
+
+  Working:
+  - If motion is detected → Door opens
+  - If no motion → Door closes
+*/
+
+#include <ESP32Servo.h>
+
+// Pin definitions
+int servoPin = 21;
+int pirPin   = 12;
+
+// Create servo object
+Servo doorServo;
+
+void setup() {
+  pinMode(pirPin, INPUT);     // PIR is input
+  Serial.begin(9600);
+
+  doorServo.attach(servoPin);
+  doorServo.write(0);         // Door closed initially
+
+  Serial.println("PIR Motion Based Door System Started");
+}
+
+void loop() {
+  int motionDetected = digitalRead(pirPin);
+
+  if (motionDetected == HIGH) {
+    doorServo.write(90);  // Open door
+    Serial.println(" Motion detected → Door OPEN");
+  } else {
+    doorServo.write(0);   // Close door
+    Serial.println("No motion → Door CLOSED");
+  }
+
+  delay(2000);
+}
